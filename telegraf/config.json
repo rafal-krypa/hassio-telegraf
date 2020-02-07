@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "slug": "hassio_telegraf",
   "description" : "An addon to add telegraf to hassio.",
-  "url" : "https://github.com/Sabuto/hassio-telegraf",
+  "url" : "https://github.com/rafal-krypa/hassio-telegraf",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
   "startup": "before",
   "boot": "auto",
@@ -95,5 +95,5 @@
     }
   },
   "ports" : {},
-  "image" : "sabuto/{arch}-hassio-telegraf"
+  "image" : "rafal-krypa/{arch}-hassio-telegraf"
 }
