@@ -6,6 +6,7 @@ declare hostname
 bashio::require.unprotected
 
 readonly CONFIG="/etc/telegraf/telegraf.conf"
+readonly CONFIGD="/etc/telegraf/telegraf.d"
 
 HOSTNAME=$(bashio::config 'hostname')
 INFLUX_SERVER=$(bashio::config 'influxDB.url')
@@ -141,6 +142,21 @@ if bashio::config.true 'ipmi_sensor.enabled'; then
   sed -i "s,IP,${IPMI_IP},g" $CONFIG
   sed -i "s,INTERVAL,${IPMI_INTERVAL},g" $CONFIG
   sed -i "s,TIMEOUT,${IPMI_TIMEOUT},g" $CONFIG
+fi
+
+if bashio::config.true 'thermal.enabled'; then
+  bashio::log.info "Updating config for thermal devices"
+  for i in /sys/class/thermal/thermal_zone*
+  do
+    bashio::log.info "...$i"
+    {
+      echo "[[inputs.file]]"
+      echo "  files = [\"$i/temp\"]"
+      echo "  name_override = \"$i\""
+      echo "  data_format = \"value\""
+      echo "  data_type = \"integer\""
+    } > $CONFIGD/`basename $i`.conf
+  done
 fi
 
 if bashio::config.true 'influxDBv2.enabled'; then
